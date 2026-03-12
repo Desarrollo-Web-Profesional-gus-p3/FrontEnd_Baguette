@@ -1,14 +1,37 @@
-import PedidoForm from './componentes/PedidoForm'
-
+// App.jsx
+import { useState, useEffect } from "react";
+import Login from "./componentes/Login";
+import PedidosDashboard from "./componentes/PedidosDashboard";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Verificar si hay token al cargar la app
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+  };
+
   return (
-    <div>
-      <h1>Pedidos</h1>
-      <PedidoForm />
-    </div>)
+    <>
+      {isAuthenticated ? (
+        <PedidosDashboard onLogout={handleLogout} />
+      ) : (
+        <Login onLogin={handleLogin} />
+      )}
+    </>
+  );
 }
 
-
-export default App
-
+export default App;
